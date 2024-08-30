@@ -257,6 +257,104 @@ function Set-PHPProjectSubfolders{
     }
  }
 
+ <#
+  #
+  # @function Set-JSProjectSubfolders
+  # @description Create the project subfolders for a JS project
+  # @return: boolean
+  # .SYNOPSIS
+  # Create the project subfolders for a JS project
+  # .DESCRIPTION
+  # Create the project subfolders for a JS project 
+  #>
+public Set-JSProjectSubFolders{
+    $JSProjectSubFolders=@("config","doc", "dependencies", "public", "src", "tests", "vendor");
+    $PublicSubfolders = @("style", "js", "pages", "img");
+    $SrcSubfolders = @("components", "pages", "services", "utils");
+    $TestsSubfolders = @("ComponentTests", "ServiceTests", "UtilTests");
+    $JSProjectSubFoldersTest = @();
+    $PublicSubfoldersTest = @();
+    $SrcSubfoldersTest = @();
+    $TestsSubfoldersTest = @();
+    $JSProjectSubFoldersTestCounter = 0;
+    $PublicSubfoldersTestCounter = 0;   
+    $SrcSubfoldersTestCounter = 0;
+    $TestsSubfoldersTestCounter = 0;
+    foreach($JSProjectSubFolder in $JSProjectSubFolders){
+        if(!(Test-Path $JSProjectSubFolder)){
+            New-Item -Path $JSProjectSubFolder -ItemType Directory
+        }
+        if(Test-Path $JSProjectSubFolder){
+            $JSProjectSubFoldersTest += $true;
+        }
+    }
+    foreach($PublicSubfolder in $PublicSubfolders){
+        if(!(Test-Path "public\$PublicSubfolder")){
+            New-Item -Path "public\$PublicSubfolder" -ItemType Directory
+        }
+        if(Test-Path "public\$PublicSubfolder"){
+            $PublicSubfoldersTest += $true;
+        }
+    }
+    foreach($SrcSubfolder in $SrcSubfolders){
+        if(!(Test-Path "src\$SrcSubfolder")){
+            New-Item -Path "src\$SrcSubfolder" -ItemType Directory
+        }
+        if(Test-Path "src\$SrcSubfolder"){
+            $SrcSubfoldersTest += $true;
+        }
+    }
+    foreach($TestsSubfolder in $TestsSubfolders){
+        if(!(Test-Path "tests\$TestsSubfolder")){
+            New-Item -Path "tests\$TestsSubfolder" -ItemType Directory
+        }
+        if(Test-Path "tests\$TestsSubfolder"){
+            $TestsSubfoldersTest += $true;
+        }
+    }
+    if($JSProjectSubFoldersTestCounter -eq $JSProjectSubFolders.Count -and $PublicSubfoldersTestCounter -eq $PublicSubfolders.Count -and $SrcSubfoldersTestCounter -eq $SrcSubfolders.Count -and $TestsSubfoldersTestCounter -eq $TestsSubfolders.Count){
+        return $true;
+    }
+    else {
+        return $false;
+    }
+}
+
+<#
+ #
+ # @function Set-JSProjectFiles
+ # @description Create the project files for a JS project
+ # @return: boolean
+ # .SYNOPSIS
+ # Create the project files for a JS project
+ # .DESCRIPTION
+ # Create the project files for a JS project
+ # 
+ #>
+function Set-JSProjectFiles{
+    $JSProjectFiles = @("index.html", "package.json", "webpack.config.js", "jest.config.js", "babel.config.js", "src\index.js", "tests\index.test.js", "src\app.js", "tests\app.test.js");
+    $JSProjectFilesTest = @();
+    $JSProjectFilesTestCounter = 0;
+    foreach ($JSProjectFile in $JSProjectFiles){
+        if(!(Test-Path $JSProjectFile)){
+            New-Item $JSProjectFile -ItemType File -Value ""
+        }
+        if(Test-Path $JSProjectFile){
+            $JSProjectFilesTest += $true;
+        }
+    }
+    foreach($JSProjectFileTest in $JSProjectFilesTest){
+        if($JSProjectFileTest -eq $true){
+            $JSProjectFilesTestCounter += 1;
+        }
+    }
+    if($JSProjectFilesTestCounter -eq $ProjectFiles.Count){
+        return $true;
+    }
+    else {
+        return $false;
+    }
+}
 
 <#
  #
@@ -301,6 +399,22 @@ function Start-BoilerplateSystem{
                 break;
             }
             if(Set-PHPProjectFiles -eq $true){
+                Write-Host "The project files were created successfully!" -ForegroundColor Green;
+            }
+            else {
+                Write-Host "There was an error in the project files creation!" -ForegroundColor Magenta;
+                break;
+            }
+        }
+        elseif($ProjectLanguage -eq 'JS'){
+            if(Set-JSProjectSubFolders -eq $true) {
+                Write-Host "The project subfolders were created successfully!" -ForegroundColor Green;
+            }
+            else {
+                Write-Host "There was an error in the project subfolders creation!" -ForegroundColor Magenta;
+                break;
+            }
+            if(Set-JSProjectFiles -eq $true){
                 Write-Host "The project files were created successfully!" -ForegroundColor Green;
             }
             else {
