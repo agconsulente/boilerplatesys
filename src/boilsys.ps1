@@ -122,10 +122,10 @@ function Set-ProjectFolder {
     }
 
     if($BaseBranchCheck -eq $GitBaseBranch) {
-        return true;
+        return $true;
     }
     else {
-        return false;
+        return $false;
     }
 }
 
@@ -144,8 +144,11 @@ function Set-ProjectFolder {
  #>
 function Set-PHPProjectSubfolders{
     $ProjectSubfolders = @("src","tests","docs","config","public","resources","vendor");
-    $ProjectSubFoldersTest= @();
     $PublicSubfolders = @("css","js","img");
+    $ProjectSubFoldersTest= @();
+    $PublicSubfoldersTest = @();
+    $ProjectSubfoldersTestCounter =0;
+    $PublicSubfoldersTestCounter =0;
     foreach($ProjectSubfolder in $ProjectSubfolders){
         if(!(Test-Path $ProjectSubfolder)){
             New-Item -Path $ProjectSubfolder -ItemType Directory
@@ -154,7 +157,11 @@ function Set-PHPProjectSubfolders{
             $ProjectSubFoldersTest += $true;
         }
     }
-    $PublicSubfoldersTest = @();
+    foreach($ProjectSubFoldersTest in $ProjectSubFoldersTest){
+        if($ProjectSubFoldersTest -eq $true){
+            $ProjectSubfoldersTestCounter += 1;
+        }
+    }
     if(Test-Path "public"){
         foreach($PublicSubfolder in $PublicSubfolders){
             if(!(Test-Path "public\$PublicSubfolder")){
@@ -165,11 +172,63 @@ function Set-PHPProjectSubfolders{
             }
         }
     }
+    foreach($PublicSubFoldersTest in $PublicSubFoldersTest){
+        if($PublicSubFoldersTest -eq $true){
+            $PublicSubfoldersTestCounter += 1;
+        }
+    }
+    if($ProjectSubfoldersTestCounter -eq $ProjectSubfolders.Count -and $PublicSubfoldersTestCounter -eq $PublicSubfolders.Count){
+        return $true;
+    }
+    else {
+        return $false;
+    }
 }
+<#
+ #
+ # @function Set-ProjectFiles
+ # @description Create the project files
+ # @return: boolean
+ # .SYNOPSIS
+ # Create the project files
+ # .DESCRIPTION
+ # Create the project files
+ #>
+function Set-ProjectFiles{
+    $ProjectFiles = @("README.md", "LICENSE", "composer.json", "composer.lock", "phpunit.xml", ".gitignore", ".gitattributes");
+    $ProjectFilesTest = @();
+    foreach ($ProjectFile in $ProjectFiles){
+        if(!(Test-Path $ProjectFile)){
+            New-Item $ProjectFile -ItemType File -Value ""
+        }
+        if(Test-Path $ProjectFile){
+            $ProjectFilesTest += $true;
+        }
+    }
+    $Counter = 0;
+    foreach($ProjectFileTest in $ProjectFilesTest){
+        if($ProjectFileTest -eq $true){
+            $Counter += 1;
+        }
+    }
+    if($Counter -eq $ProjectFiles.Count){
+        return $true;
+    }
+    else {
+        return $false;
+    }
+}   
 
-
-
-# Start and test point
+<#
+ #
+ # @function Main
+ # @description Start point of the script
+ # @return: void
+ # .SYNOPSIS
+ # Start point of the script
+ # .DESCRIPTION
+ #
+#>
 function Main{
     # check all parameters
     if(Get-ParameterCheck -eq $false) {
@@ -193,6 +252,13 @@ function Main{
         }
         else {
             Write-Host "There was an error in the project folder creation!";
+            break;
+        }
+        if(Set-ProjectFiles -eq $true){
+            Write-Host "The project files were created successfully!";
+        }
+        else {
+            Write-Host "There was an error in the project files creation!";
             break;
         }
     }
