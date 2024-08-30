@@ -1,6 +1,6 @@
 <#
  #
- # @project: boilsys
+ # @project: boilerplatesys
  # @created: 2024-08-29
  # @description: Boilerplate system for projects
  # @version: 0.1.0
@@ -113,7 +113,7 @@ function Set-ProjectFolder {
         
     }
     else {
-        Write-Host "The project folder already exists so, we move into it!";
+        Write-Host "The project folder already exists so, we move into it!" -ForegroundColor Yellow;
         Set-Location $ProjectPath;
         if(!(Test-Path $ProjectPath\.git)){
             git init --initial-branch=$GitBaseBranch . 
@@ -128,6 +128,42 @@ function Set-ProjectFolder {
         return $false;
     }
 }
+
+<#
+ #
+ # @function Set-ProjectFiles
+ # @description Create the project files
+ # @return: boolean
+ # .SYNOPSIS
+ # Create the project files
+ # .DESCRIPTION
+ # Create the project files
+ #>
+ function Set-ProjectFiles{
+    $ProjectFiles = @("README.md", "LICENSE", ".gitignore", ".gitattributes");
+    $ProjectFilesTest = @();
+    foreach ($ProjectFile in $ProjectFiles){
+        if(!(Test-Path $ProjectFile)){
+            New-Item $ProjectFile -ItemType File -Value ""
+        }
+        if(Test-Path $ProjectFile){
+            $ProjectFilesTest += $true;
+        }
+    }
+    $Counter = 0;
+    foreach($ProjectFileTest in $ProjectFilesTest){
+        if($ProjectFileTest -eq $true){
+            $Counter += 1;
+        }
+    }
+    if($Counter -eq $ProjectFiles.Count){
+        return $true;
+    }
+    else {
+        return $false;
+    }
+}   
+
 
 <#
  #
@@ -184,40 +220,43 @@ function Set-PHPProjectSubfolders{
         return $false;
     }
 }
+
 <#
  #
- # @function Set-ProjectFiles
- # @description Create the project files
+ # @function Set-PHPProjectFiles
+ # @description Create the project files for a PHP project
  # @return: boolean
  # .SYNOPSIS
- # Create the project files
+ # Create the project files for a PHP project
  # .DESCRIPTION
- # Create the project files
+ # Create the project files for a PHP project
+ # 
  #>
-function Set-ProjectFiles{
-    $ProjectFiles = @("README.md", "LICENSE", "composer.json", "composer.lock", "phpunit.xml", ".gitignore", ".gitattributes");
-    $ProjectFilesTest = @();
-    foreach ($ProjectFile in $ProjectFiles){
-        if(!(Test-Path $ProjectFile)){
-            New-Item $ProjectFile -ItemType File -Value ""
+ function Set-PHPProjectFiles{
+    $PHPProjectFiles = @("index.php", "composer.json", "phpunit.xml", "phpcs.xml", "phpmd.xml", "phpunit.xml.dist");
+    $PHPProjectFilesTest = @();
+    $PHPProjectFilesTestCounter = 0;
+    foreach ($PHPProjectFile in $PHPProjectFiles){
+        if(!(Test-Path $PHPProjectFile)){
+            New-Item $PHPProjectFile -ItemType File -Value ""
         }
-        if(Test-Path $ProjectFile){
-            $ProjectFilesTest += $true;
-        }
-    }
-    $Counter = 0;
-    foreach($ProjectFileTest in $ProjectFilesTest){
-        if($ProjectFileTest -eq $true){
-            $Counter += 1;
+        if(Test-Path $PHPProjectFile){
+            $PHPProjectFilesTest += $true;
         }
     }
-    if($Counter -eq $ProjectFiles.Count){
+    foreach($PHPProjectFileTest in $PHPProjectFilesTest){
+        if($PHPProjectFileTest -eq $true){
+            $PHPProjectFilesTestCounter += 1;
+        }
+    }
+    if($PHPProjectFilesTestCounter -eq $ProjectFiles.Count){
         return $true;
     }
     else {
         return $false;
     }
-}   
+ }
+
 
 <#
  #
@@ -232,33 +271,41 @@ function Set-ProjectFiles{
 function Main{
     # check all parameters
     if(Get-ParameterCheck -eq $false) {
-        Write-Host "There was an error in the parameters";
+        Write-Host "There was an error in the parameters" -ForegroundColor Magenta;
         break;
     }
     else {
-        Write-Host "All parameters are correct!";
-         # create the project folder
-        $SetProjectFolder = Set-ProjectFolder;
-        if($SetProjectFolder -eq $true) {
-            Write-Host "The project folder was created successfully!";
-            $SetPHPProjectSubfoldersCheck = Set-PHPProjectSubfolders;
-            if($SetPHPProjectSubfoldersCheck -eq $true) {
-                Write-Host "The project subfolders were created successfully!";
-            }
-            else {
-                Write-Host "There was an error in the project subfolders creation!";
-                break;
-            }
+        Write-Host "All parameters are correct!" -ForegroundColor Green;
+        # create the project folder
+        
+        if(Set-ProjectFolder -eq $true) {
+            Write-Host "The project folder was created successfully!" -ForegroundColor Green;
         }
         else {
-            Write-Host "There was an error in the project folder creation!";
+            Write-Host "There was an error in the project folder creation!" -ForegroundColor Magenta;
             break;
         }
         if(Set-ProjectFiles -eq $true){
-            Write-Host "The project files were created successfully!";
+            Write-Host "The project files were created successfully!" -ForegroundColor Green;
         }
         else {
-            Write-Host "There was an error in the project files creation!";
+            Write-Host "There was an error in the project files creation!" -ForegroundColor Magenta;
+            break;
+        }
+
+        if(Set-PHPProjectSubfolders -eq $true) {
+            Write-Host "The project subfolders were created successfully!" -ForegroundColor Green;
+        }
+        else {
+            Write-Host "There was an error in the project subfolders creation!" -ForegroundColor Magenta;
+            break;
+        }
+
+        if(Set-PHPProjectFiles -eq $true){
+            Write-Host "The project files were created successfully!" -ForegroundColor Green;
+        }
+        else {
+            Write-Host "There was an error in the project files creation!" -ForegroundColor Magenta;
             break;
         }
     }
