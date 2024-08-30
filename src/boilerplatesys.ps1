@@ -267,7 +267,7 @@ function Set-PHPProjectSubfolders{
   # .DESCRIPTION
   # Create the project subfolders for a JS project 
   #>
-public Set-JSProjectSubFolders{
+function Set-JSProjectSubFolders{
     $JSProjectSubFolders=@("config","doc", "dependencies", "public", "src", "tests", "vendor");
     $PublicSubfolders = @("style", "js", "pages", "img");
     $SrcSubfolders = @("components", "pages", "services", "utils");
@@ -332,7 +332,7 @@ public Set-JSProjectSubFolders{
  # 
  #>
 function Set-JSProjectFiles{
-    $JSProjectFiles = @("index.html", "package.json", "webpack.config.js", "jest.config.js", "babel.config.js", "src\index.js", "tests\index.test.js", "src\app.js", "tests\app.test.js");
+    $JSProjectFiles = @("index.html", "package.json", "webpack.config.js", "jest.config.js", "babel.config.js", "$ProjectParentPath\$ProjectName\src\index.js", "$ProjectParentPath\$ProjectName\tests\indextest.js", "$ProjectParentPath\$ProjectName\src\app.js", "$ProjectParentPath\$ProjectName\tests\apptest.js");
     $JSProjectFilesTest = @();
     $JSProjectFilesTestCounter = 0;
     foreach ($JSProjectFile in $JSProjectFiles){
