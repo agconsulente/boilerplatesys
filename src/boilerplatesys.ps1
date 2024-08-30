@@ -390,7 +390,7 @@ function Start-BoilerplateSystem{
             Write-Host "There was an error in the project files creation!" -ForegroundColor Magenta;
             break;
         }
-        if($ProjectLanguage -eq 'PHP'){
+        if($ProjectLanguage -eq 'PHP' -or $ProjectLanguage -eq 'php') {
             if(Set-PHPProjectSubfolders -eq $true) {
                 Write-Host "The project subfolders were created successfully!" -ForegroundColor Green;
             }
@@ -406,7 +406,7 @@ function Start-BoilerplateSystem{
                 break;
             }
         }
-        elseif($ProjectLanguage -eq 'JS'){
+        elseif($ProjectLanguage -eq 'JS' -or $ProjectLanguage -eq "js" -or $ProjectLanguage -eq 'JavaScript' -or $ProjectLanguage -eq 'Javascript' -or $ProjectLanguage -eq 'javascript'){
             if(Set-JSProjectSubFolders -eq $true) {
                 Write-Host "The project subfolders were created successfully!" -ForegroundColor Green;
             }
