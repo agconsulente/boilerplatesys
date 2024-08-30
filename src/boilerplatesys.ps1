@@ -260,7 +260,7 @@ function Set-PHPProjectSubfolders{
 
 <#
  #
- # @function Main
+ # @function Start-BoilerplateSystem
  # @description Start point of the script
  # @return: void
  # .SYNOPSIS
@@ -292,21 +292,21 @@ function Start-BoilerplateSystem{
             Write-Host "There was an error in the project files creation!" -ForegroundColor Magenta;
             break;
         }
-
-        if(Set-PHPProjectSubfolders -eq $true) {
-            Write-Host "The project subfolders were created successfully!" -ForegroundColor Green;
-        }
-        else {
-            Write-Host "There was an error in the project subfolders creation!" -ForegroundColor Magenta;
-            break;
-        }
-
-        if(Set-PHPProjectFiles -eq $true){
-            Write-Host "The project files were created successfully!" -ForegroundColor Green;
-        }
-        else {
-            Write-Host "There was an error in the project files creation!" -ForegroundColor Magenta;
-            break;
+        if($ProjectLanguage -eq 'PHP'){
+            if(Set-PHPProjectSubfolders -eq $true) {
+                Write-Host "The project subfolders were created successfully!" -ForegroundColor Green;
+            }
+            else {
+                Write-Host "There was an error in the project subfolders creation!" -ForegroundColor Magenta;
+                break;
+            }
+            if(Set-PHPProjectFiles -eq $true){
+                Write-Host "The project files were created successfully!" -ForegroundColor Green;
+            }
+            else {
+                Write-Host "There was an error in the project files creation!" -ForegroundColor Magenta;
+                break;
+            }
         }
     }
 }
