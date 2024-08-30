@@ -367,6 +367,9 @@ function Set-JSProjectFiles{
  #
 #>
 function Start-BoilerplateSystem{
+    [System.Console]::Clear();
+    Write-Host "Boilerplate System" -ForegroundColor Cyan;
+    Write-Host "==================" -ForegroundColor Cyan; 
     # check all parameters
     if(Get-ParameterCheck -eq $false) {
         Write-Host "There was an error in the parameters" -ForegroundColor Magenta;
