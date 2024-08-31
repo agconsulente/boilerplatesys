@@ -455,6 +455,6 @@ function Start-BoilerplateSystem{
             }
         }
     }
-    Set-Location "$HOME\github";
+    Set-Location "$$ProjectParentPath";
 }
 Start-BoilerplateSystem
