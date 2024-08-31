@@ -455,6 +455,6 @@ function Start-BoilerplateSystem{
             }
         }
     }
-    Set-Location "$$ProjectParentPath";
+    Set-Location "$ProjectParentPath";
 }
 Start-BoilerplateSystem
