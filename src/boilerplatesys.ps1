@@ -14,11 +14,14 @@
 
 # Setup all parameters from console
 Param(
-    $ProjectName="",
+    [Parameter(Mandatory=$true)]
+    $ProjectName='',
     $ProjectParentPath="$HOME\github",
-    $GitUserName="",
-    $GitBaseBranch="master",
-    $ProjectLanguage="PHP"
+    [Parameter(Mandatory=$true)]
+    $GitUserName='',
+    $GitBaseBranch='master',
+    [Parameter(Mandatory=$true)]
+    $ProjectLanguage=''
 )
 
 <#
@@ -36,10 +39,13 @@ function Get-ParameterCheck {
     $ProjectNameCheck = $false;
     if($ProjectName -eq '') {
         $ProjectName = Read-Host "Enter the project name (required)";
-        if(!($ProjectName -eq ''))
+        if(!($null -eq $ProjectName))
         {
             $ProjectNameCheck = $true;
         }
+    }
+    elseif(!($null -eq $ProjectName)) {
+        $ProjectNameCheck = $true;
     }
     $ProjectParentPathCheck = $false;
     if($ProjectParentPath -eq "$HOME\github") {
@@ -52,6 +58,9 @@ function Get-ParameterCheck {
             $ProjectParentPathCheck = $true;
         }
     }
+    elseif(!($ProjectParentPath -eq "$HOME\github") -or !($ProjectParentPath -eq '')) {
+        $ProjectParentPathCheck = $true;
+    }
     $GitUserNameCheck = $false;
     if($GitUserName -eq '') {
         $GitUserName = Read-Host "Enter your git username";
@@ -59,6 +68,8 @@ function Get-ParameterCheck {
         {
             $GitUserNameCheck = $true;
         }
+    }elseif (!($GitUserName -eq '')) {
+        $GitUserNameCheck = $true;
     }
     $GitBaseBranchCheck = $false;
     if($GitBaseBranch -eq 'master') {
@@ -71,6 +82,9 @@ function Get-ParameterCheck {
             $GitBaseBranchCheck = $true;
         }
     }
+    elseif(!($GitBaseBranch -eq 'master') -or !($GitBaseBranch -eq '')) {
+        $GitBaseBranchCheck = $true;
+    }
     $ProjectLanguageCheck = $false;
     if( $ProjectLanguage -eq 'PHP') {
         $Respone = Read-Host "The default language is $ProjectLanguage. Do you want to use a different language? (Y/N)";
@@ -82,7 +96,19 @@ function Get-ParameterCheck {
             $ProjectLanguageCheck = $true;
         }
     }
-    if($ProjectNameCheck -eq $true -and $ProjectParentPathCheck -eq $true -and $GitUserNameCheck -eq $true -and $GitBaseBranchCheck -eq $true -and $ProjectLanguageCheck -eq $true) {
+    elseif($ProjectLanguage -eq  '' ){
+        $ProjectLanguage = Read-Host "Enter the project language";
+        if(!($ProjectLanguage -eq ''))
+        {
+            Write-Host "$ProjectLanguage" -ForegroundColor Yellow;
+            $ProjectLanguageCheck = $true;
+        }
+    }
+    elseif(!($ProjectLanguage -eq 'PHP') -or !($ProjectLanguage -eq '')) {
+        $ProjectLanguageCheck = $true;
+    }
+    # Write-Host "$ProjectNameCheck $ProjectParentPathCheck $GitUserNameCheck $GitBaseBranchCheck $ProjectLanguageCheck" -ForegroundColor Yellow;
+    if(($ProjectNameCheck -eq $true) -and ($ProjectParentPathCheck -eq $true) -and ($GitUserNameCheck -eq $true) -and ($GitBaseBranchCheck -eq $true) -and ($ProjectLanguageCheck -eq $true)) {
         return $true;
     }
     else {
@@ -103,6 +129,8 @@ function Get-ParameterCheck {
  #>
 function Set-ProjectFolder {
     $ProjectPath = "$ProjectParentPath\$ProjectName";
+    # Write-Host "$ProjectName" -ForegroundColor Cyan;
+    # Write-Host "$ProjectPath" -ForegroundColor Yellow;
     if(!(Test-Path $ProjectPath)) {
         New-Item -Path $ProjectPath -ItemType Directory
         Set-Location $ProjectPath;
@@ -367,11 +395,12 @@ function Set-JSProjectFiles{
  #
 #>
 function Start-BoilerplateSystem{
-    [System.Console]::Clear();
     Write-Host "Boilerplate System" -ForegroundColor Cyan;
     Write-Host "==================" -ForegroundColor Cyan; 
     # check all parameters
-    if(Get-ParameterCheck -eq $false) {
+    $isGetParameterCheck = Get-ParameterCheck;
+    # Write-Host "$isGetParameterCheck" -ForegroundColor Yellow;
+    if($isGetParameterCheck -eq $false) {
         Write-Host "There was an error in the parameters" -ForegroundColor Magenta;
         break;
     }
@@ -409,7 +438,7 @@ function Start-BoilerplateSystem{
                 break;
             }
         }
-        elseif($ProjectLanguage -eq 'JS' -or $ProjectLanguage -eq "js" -or $ProjectLanguage -eq 'JavaScript' -or $ProjectLanguage -eq 'Javascript' -or $ProjectLanguage -eq 'javascript'){
+        if(($ProjectLanguage -eq "JS") -or ($ProjectLanguage -eq "js") -or ($ProjectLanguage -eq "JavaScript") -or ($ProjectLanguage -eq "Javascript") -or ($ProjectLanguage -eq "javascript")){
             if(Set-JSProjectSubFolders -eq $true) {
                 Write-Host "The project subfolders were created successfully!" -ForegroundColor Green;
             }
@@ -426,5 +455,6 @@ function Start-BoilerplateSystem{
             }
         }
     }
+    Set-Location "$HOME\github";
 }
 Start-BoilerplateSystem
