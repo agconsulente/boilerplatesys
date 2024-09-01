@@ -386,6 +386,65 @@ function Set-JSProjectFiles{
 
 <#
  #
+ # @function Get-GitPublishRepository
+ # @description Publish the repository to GitHub
+ # @return: void
+ #  .SYNOPSIS
+ # Publish the repository to GitHub
+ # .DESCRIPTION
+ # Publish the repository to GitHub
+ # .EXAMPLE
+ # Get-GitPublishRepository -RepositoryName "MyRepository" -RepositoryParentPath "Drive:\your\parent\branch" -GitBranch "master"
+ #
+ #>
+function Get-GitPublishRepository {
+    param(
+        [string]$RepositoryName,
+        [string]$RepositoryParentPath,
+        [string]$GitBranch
+    )
+    $RepositoryNameTest = $false;
+    $RepositoryParentPathTest = $false;
+    $GitBranchTest = $false;
+    if($RepositoryName -eq ''){
+        throw "RepositoryName is required";
+        $RepositoryName = Read-Host "Enter Repository Name";
+        
+    }
+    write-host "RepositoryName: $RepositoryName";
+    if(!($RepositoryName -eq '')){
+            $RepositoryNameTest = $true;
+     }
+    if($RepositoryParentPath -eq ''){
+        throw "RepositoryParentPath is required";
+        $RepositoryParentPath = Read-Host "Enter Repository Parent Path";
+    }
+    write-host "RepositoryParentPath: $RepositoryParentPath";
+    if(!($RepositoryParentPath -eq '')){
+        $RepositoryParentPathTest = $true;
+    }
+    
+    if($GitBranch -eq ''){
+        throw "GitBranch is required";
+        $GitBranch = Read-Host "Enter Git Branch";
+    }
+    write-host "GitBranch: $GitBranch";
+    if(!($GitBranch -eq '')){
+        $GitBranchTest = $true;
+    }
+    if($RepositoryNameTest -eq $true -and $RepositoryParentPathTest -eq $true -and $GitBranchTest -eq $true){
+        Set-Location "$RepositoryParentPath\$RepositoryName";
+        git add */*.*;
+        git commit -m "Initial commit";
+        git add origin "https://github.com/agconsulente/$RepositoryName.git";
+        git push --set-upstream origin $GitBranch;
+        
+    }
+}
+
+
+<#
+ #
  # @function Start-BoilerplateSystem
  # @description Start point of the script
  # @return: void
