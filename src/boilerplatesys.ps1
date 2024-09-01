@@ -386,7 +386,7 @@ function Set-JSProjectFiles{
 
 <#
  #
- # @function Get-GitPublishRepository
+ # @function Set-GitRepositoryPublish
  # @description Publish the repository to GitHub
  # @return: void
  #  .SYNOPSIS
@@ -394,10 +394,10 @@ function Set-JSProjectFiles{
  # .DESCRIPTION
  # Publish the repository to GitHub
  # .EXAMPLE
- # Get-GitPublishRepository -RepositoryName "MyRepository" -RepositoryParentPath "Drive:\your\parent\branch" -GitBranch "master"
+ # Set-GitPublishRepository -RepositoryName "MyRepository" -RepositoryParentPath "Drive:\your\parent\branch" -GitBranch "master"
  #
  #>
-function Get-GitPublishRepository {
+function Set-GitRepositoryPublish {
     param(
         [string]$RepositoryName,
         [string]$RepositoryParentPath,
