@@ -1,4 +1,4 @@
-<#
+<#k
  #
  # @project: boilerplatesys
  # @created: 2024-08-29
@@ -293,7 +293,8 @@ function Set-PHPProjectSubfolders{
   # .SYNOPSIS
   # Create the project subfolders for a JS project
   # .DESCRIPTION
-  # Create the project subfolders for a JS project 
+  # Create the project subfolders for a JS project
+  #
   #>
 function Set-JSProjectSubFolders{
     $JSProjectSubFolders=@("config","doc", "dependencies", "public", "src", "tests", "vendor");
@@ -454,6 +455,7 @@ function Set-GitRepositoryPublish {
  #
 #>
 function Start-BoilerplateSystem{
+    Write-Host "==================" -ForegroundColor Cyan; 
     Write-Host "Boilerplate System" -ForegroundColor Cyan;
     Write-Host "==================" -ForegroundColor Cyan; 
     # check all parameters
@@ -515,5 +517,6 @@ function Start-BoilerplateSystem{
         }
     }
     Set-Location "$ProjectParentPath";
+    Exit;
 }
 Start-BoilerplateSystem
